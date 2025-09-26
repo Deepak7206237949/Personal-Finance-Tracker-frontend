@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../services/api';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ export default function Signup() {
     role: 'USER'
   });
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { signup, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -37,24 +37,21 @@ export default function Signup() {
     }
 
     try {
-      setLoading(true);
-      await api.post('/auth/signup', {
+      await signup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         role: formData.role
       });
-      
+
       // Success - redirect to login
-      navigate('/login', { 
-        state: { 
-          message: 'Account created successfully! Please login with your credentials.' 
+      navigate('/login', {
+        state: {
+          message: 'Account created successfully! Please login with your credentials.'
         }
       });
     } catch (err) {
       setError(err.response?.data?.error || 'Signup failed. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -136,12 +133,12 @@ export default function Signup() {
             />
           </div>
 
-          <button 
-            className="btn-primary" 
+          <button
+            className="btn-primary"
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 

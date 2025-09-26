@@ -1,0 +1,2 @@
+import{r,b as i,j as e}from"./index-a8e5d44c.js";function n(){const[t,a]=r.useState([]);return r.useEffect(()=>{i.get("/users").then(s=>a(s.data)).catch(console.error)},[]),e.jsxs("div",{style:{padding:20},children:[e.jsx("h2",{children:"All Users (Admin)"}),e.jsx("ul",{children:t.map(s=>e.jsxs("li",{children:[s.email," — ",s.role]},s.id))})]})}export{n as default};
+//# sourceMappingURL=Users-9a044168.js.map

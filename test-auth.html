@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #007bff; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .demo-accounts {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Personal Finance Tracker - Authentication Test</h1>
+    
+    <div class="demo-accounts">
+        <h3>Demo Accounts:</h3>
+        <ul>
+            <li><strong>Admin:</strong> admin@finance.com / SecureAdmin2024!</li>
+            <li><strong>User:</strong> user@demo.com / UserPass123!</li>
+            <li><strong>Read Only:</strong> readonly@demo.com / ReadOnly123</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 Quick Start Guide</h2>
+        <ol>
+            <li>Open the application: <a href="http://localhost:5174" target="_blank">http://localhost:5174</a></li>
+            <li>Try signing up with a new account</li>
+            <li>Or login with one of the demo accounts above</li>
+            <li>After successful login, you'll be redirected to the dashboard</li>
+            <li>Explore the different features based on your role</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Features Implemented</h2>
+        <ul class="success">
+            <li>✓ Complete sign-up functionality with validation</li>
+            <li>✓ Sign-in with email and password</li>
+            <li>✓ Local storage for user data persistence</li>
+            <li>✓ Cookie-based session management</li>
+            <li>✓ Role-based access control (Admin, User, Read-Only)</li>
+            <li>✓ Protected routes requiring authentication</li>
+            <li>✓ Dashboard with financial charts and statistics</li>
+            <li>✓ Transaction management</li>
+            <li>✓ Category management (Admin only)</li>
+            <li>✓ User management (Admin only)</li>
+            <li>✓ Responsive design with modern UI</li>
+            <li>✓ Automatic redirect after successful login</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Local Storage Test</h2>
+        <button onclick="checkLocalStorage()">Check Local Storage</button>
+        <button onclick="clearLocalStorage()">Clear All Data</button>
+        <div id="storage-info"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🍪 Cookie Test</h2>
+        <button onclick="checkCookies()">Check Cookies</button>
+        <button onclick="clearCookies()">Clear Cookies</button>
+        <div id="cookie-info"></div>
+    </div>
+
+    <script>
+        function checkLocalStorage() {
+            const info = document.getElementById('storage-info');
+            const users = localStorage.getItem('pf_users');
+            const currentUser = localStorage.getItem('pf_user');
+            const token = localStorage.getItem('pf_access_token');
+            const categories = localStorage.getItem('pf_categories');
+            const transactions = localStorage.getItem('pf_transactions');
+
+            let html = '<h4>Local Storage Contents:</h4>';
+            html += `<p><strong>Users:</strong> ${users ? JSON.parse(users).length + ' users' : 'Not found'}</p>`;
+            html += `<p><strong>Current User:</strong> ${currentUser ? JSON.parse(currentUser).email : 'Not logged in'}</p>`;
+            html += `<p><strong>Access Token:</strong> ${token ? 'Present' : 'Not found'}</p>`;
+            html += `<p><strong>Categories:</strong> ${categories ? JSON.parse(categories).length + ' categories' : 'Not found'}</p>`;
+            html += `<p><strong>Transactions:</strong> ${transactions ? JSON.parse(transactions).length + ' transactions' : 'Not found'}</p>`;
+
+            info.innerHTML = html;
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+            document.getElementById('storage-info').innerHTML = '<p class="success">Local storage cleared!</p>';
+        }
+
+        function checkCookies() {
+            const info = document.getElementById('cookie-info');
+            const cookies = document.cookie.split(';').map(c => c.trim()).filter(c => c.startsWith('pf_'));
+            
+            let html = '<h4>Finance Tracker Cookies:</h4>';
+            if (cookies.length === 0) {
+                html += '<p>No finance tracker cookies found</p>';
+            } else {
+                cookies.forEach(cookie => {
+                    const [name, value] = cookie.split('=');
+                    html += `<p><strong>${name}:</strong> ${value ? 'Present' : 'Empty'}</p>`;
+                });
+            }
+            
+            info.innerHTML = html;
+        }
+
+        function clearCookies() {
+            document.cookie = "pf_access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            document.cookie = "pf_refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            document.cookie = "pf_user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            document.getElementById('cookie-info').innerHTML = '<p class="success">Cookies cleared!</p>';
+        }
+
+        // Auto-check storage on page load
+        window.onload = function() {
+            checkLocalStorage();
+            checkCookies();
+        };
+    </script>
+</body>
+</html>

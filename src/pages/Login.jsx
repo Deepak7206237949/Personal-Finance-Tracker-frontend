@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
+  const { login, isLoading, user } = useContext(AuthContext);
   const nav = useNavigate();
   const location = useLocation();
   const [err, setErr] = useState(null);
@@ -17,8 +17,22 @@ export default function Login() {
     }
   }, [location]);
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      nav('/');
+    }
+  }, [user, nav]);
+
   const handle = async (e) => {
     e.preventDefault();
+    setErr(null);
+
+    if (!email || !password) {
+      setErr('Please fill in all fields');
+      return;
+    }
+
     try {
       await login(email, password);
       nav('/');
@@ -67,8 +81,8 @@ export default function Login() {
               required
             />
           </div>
-          <button className="btn-primary" type="submit">
-            Sign In
+          <button className="btn-primary" type="submit" disabled={isLoading}>
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
         <div className="demo-credentials">
